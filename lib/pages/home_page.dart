@@ -63,7 +63,7 @@ class _HomePageState extends State<HomePage> {
         title: Text("SQLite"),
         centerTitle: true,
       ),
-      body: FutureBuilder(
+      body: FutureBuilder<List<Student>>(
         future: getStudents(),
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data!.isNotEmpty) {
@@ -74,6 +74,13 @@ class _HomePageState extends State<HomePage> {
                 return ListTile(
                   title: Text(
                     "${students[index].id} ${students[index].name} ${students[index].age}",
+                  ),
+                  trailing: IconButton(
+                    onPressed: () async {
+                      await deleteStudent(students[index].id);
+                      setState(() {});
+                    },
+                    icon: Icon(Icons.delete),
                   ),
                 );
               },
