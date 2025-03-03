@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:test_sqlite/databases.dart';
 import 'package:test_sqlite/models/student.dart';
 
@@ -13,7 +14,11 @@ class _HomePageState extends State<HomePage> {
   Future<void> insertStudent(Student student) async {
     final db = await database;
 
-    await db.insert("students", student.toJson());
+    await db.insert(
+      "students",
+      student.toJson(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<List<Student>> getStudents() async {
@@ -45,6 +50,8 @@ class _HomePageState extends State<HomePage> {
     await db.delete("students", where: "id = ?", whereArgs: [id]);
   }
 
+  final TextEditingController _controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,6 +82,42 @@ class _HomePageState extends State<HomePage> {
             return Center(child: Text("There are no data."));
           }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text("Add your data:"),
+                content: TextField(controller: _controller),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      _controller.clear();
+                      Navigator.pop(context);
+                    },
+                    child: Text("Cancel"),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      if (_controller.text.isNotEmpty) {
+                        await insertStudent(
+                          Student(id: 0, name: _controller.text, age: 24),
+                        );
+                      }
+                      _controller.clear();
+                      setState(() {});
+                      Navigator.pop(context);
+                    },
+                    child: Text("Add"),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        child: Icon(Icons.add),
       ),
     );
   }
