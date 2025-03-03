@@ -1,7 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:test_sqlite/pages/home_page.dart';
+import 'databases.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  database = openDatabase(
+    join(await getDatabasesPath(), "students.db"),
+    version: 1,
+    onCreate: (db, version) {
+      return db.execute('''
+      CREATE TABLE students (
+      id INTEGER PRIMARY KEY, 
+      name TEXT, 
+      age INTEGER )''');
+    },
+  );
   runApp(const MyApp());
 }
 
