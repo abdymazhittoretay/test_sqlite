@@ -75,12 +75,25 @@ class _HomePageState extends State<HomePage> {
                   title: Text(
                     "${students[index].id} ${students[index].name} ${students[index].age}",
                   ),
-                  trailing: IconButton(
-                    onPressed: () async {
-                      await deleteStudent(students[index].id);
-                      setState(() {});
-                    },
-                    icon: Icon(Icons.delete),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        onPressed: () async {
+                          _controller.text = students[index].name;
+                          openDialog(id: students[index].id);
+                          setState(() {});
+                        },
+                        icon: Icon(Icons.edit),
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          await deleteStudent(students[index].id);
+                          setState(() {});
+                        },
+                        icon: Icon(Icons.delete),
+                      ),
+                    ],
                   ),
                 );
               },
@@ -92,40 +105,48 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Text("Add your data:"),
-                content: TextField(controller: _controller),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      _controller.clear();
-                      Navigator.pop(context);
-                    },
-                    child: Text("Cancel"),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      if (_controller.text.isNotEmpty) {
-                        await insertStudent(
-                          Student(id: 0, name: _controller.text, age: 24),
-                        );
-                      }
-                      _controller.clear();
-                      setState(() {});
-                      Navigator.pop(context);
-                    },
-                    child: Text("Add"),
-                  ),
-                ],
-              );
-            },
-          );
+          openDialog();
         },
         child: Icon(Icons.add),
       ),
+    );
+  }
+
+  void openDialog({int? id}) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Add/Update your data:"),
+          content: TextField(controller: _controller),
+          actions: [
+            TextButton(
+              onPressed: () {
+                _controller.clear();
+                Navigator.pop(context);
+              },
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                if (_controller.text.isNotEmpty && id == null) {
+                  await insertStudent(
+                    Student(id: 0, name: _controller.text, age: 24),
+                  );
+                } else if (_controller.text.isNotEmpty && id != null) {
+                  await updateStudent(
+                    Student(id: 0, name: _controller.text, age: 15),
+                  );
+                }
+                _controller.clear();
+                setState(() {});
+                Navigator.pop(context);
+              },
+              child: Text("Add/Update"),
+            ),
+          ],
+        );
+      },
     );
   }
 }
