@@ -1,5 +1,6 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:test_sqlite/models/dog.dart';
 
 class DogsDatabase {
   static final DogsDatabase instance = DogsDatabase._init();
@@ -28,6 +29,22 @@ class DogsDatabase {
     );
 
     return _database!;
+  }
+
+  Future<Dog> createDog(Dog dog) async {
+    Database db = await instance.database;
+
+    int id = await db.insert("dogs", dog.toJson());
+
+    return dog.copy(id: id);
+  }
+
+  Future<List<Dog>> getAllDogs() async {
+    Database db = await instance.database;
+
+    List<Map<String, Object?>> result = await db.query("dogs");
+
+    return result.map((json) => Dog.fromJson(json)).toList();
   }
 
   Future<void> closeDatabase() async {
