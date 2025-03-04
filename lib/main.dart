@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:test_sqlite/pages/home_page.dart';
-import 'databases.dart';
+import 'database/databases.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

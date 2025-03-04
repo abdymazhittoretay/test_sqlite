@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:test_sqlite/databases.dart';
+import 'package:test_sqlite/database/databases.dart';
 import 'package:test_sqlite/models/student.dart';
 
 class HomePage extends StatefulWidget {
