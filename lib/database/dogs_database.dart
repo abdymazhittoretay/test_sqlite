@@ -20,7 +20,7 @@ class DogsDatabase {
         await db.execute('''
             CREATE TABLE dogs 
             (
-            id INTEGER PRIMARY KEY AUTOINCREMENT, 
+            _id INTEGER PRIMARY KEY AUTOINCREMENT, 
             name TEXT NOT NULL, 
             age INTEGER NOT NULL
             )
@@ -31,12 +31,27 @@ class DogsDatabase {
     return _database!;
   }
 
-  Future<Dog> createDog(Dog dog) async {
+  Future<void> createDog(Dog dog) async {
     Database db = await instance.database;
 
-    int id = await db.insert("dogs", dog.toJson());
+    await db.insert("dogs", dog.toJson());
+  }
 
-    return dog.copy(id: id);
+  Future<void> updateDog(Dog dog) async {
+    Database db = await instance.database;
+
+    await db.update(
+      "dogs",
+      dog.toJson(),
+      where: "_id = ?",
+      whereArgs: [dog.id],
+    );
+  }
+
+  Future<void> deleteDog(int id) async {
+    Database db = await instance.database;
+
+    await db.delete("dogs", where: "_id = ?", whereArgs: [id]);
   }
 
   Future<List<Dog>> getAllDogs() async {

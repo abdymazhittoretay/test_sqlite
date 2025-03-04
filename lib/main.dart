@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:test_sqlite/pages/home_page.dart';
+import 'package:test_sqlite/pages/page_to_test.dart';
 import 'database/databases.dart';
 
 void main() async {
@@ -25,6 +26,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: HomePage());
+    return MaterialApp(debugShowCheckedModeBanner: false, home: PageToTest());
   }
 }
